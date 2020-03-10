@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import { Button } from "react-bootstrap";
 
-import { listLogEntries, deleteLogEntry } from "./API";
+import { listLogEntries, deleteLogEntry, editLogEntry } from "./API";
 import LogEntryForm from "./LogEntryForm";
 
 const App = () => {
   const [logEntries, setLogEntries] = useState([]);
   const [showPopup, setShowPopup] = useState({});
   const [addEntryLocation, setAddEntryLocation] = useState(null);
-  const [showSvg, setShowSvg] = useState({});
+  const [deleteEntryLocation, setDeleteEntryLocation] = useState(null);
+  const [editEntryLocation, setEditEntryLocation] = useState({});
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",
@@ -18,6 +19,7 @@ const App = () => {
     zoom: 3
   });
 
+  //Get entries from db
   const getEntries = async () => {
     const logEntries = await listLogEntries();
     setLogEntries(logEntries);
@@ -33,6 +35,10 @@ const App = () => {
       latitude,
       longitude
     });
+    setDeleteEntryLocation({
+      latitude,
+      longitude
+    });
   };
 
   const onClear = async id => {
@@ -41,16 +47,46 @@ const App = () => {
       // ...showPopup,
       [id]: false
     });
-    setShowSvg({
-      [id]: false
-    });
-    // console.log(del);
-    // console.log("test");
+    getEntries();
   };
 
-  const onEdit = () => {
-    console.log("edited");
+  const onEdit = async id => {
+    await editLogEntry(id);
+
+    setShowPopup({
+      // ...showPopup,
+      [id]: false
+    });
+    setEditEntryLocation({
+      [id]: false
+    });
+    console.log(editEntryLocation);
   };
+
+  const elmEditForm =
+    editEntryLocation === true ? (
+      <Popup
+        latitude={addEntryLocation.latitude}
+        longitude={addEntryLocation.longitude}
+        closeButton={true}
+        closeOnClick={false}
+        dynamicPosition={true}
+        onClose={() => setAddEntryLocation(null)}
+        anchor="top"
+      >
+        <div className="popup">
+          <LogEntryForm
+            onClose={() => {
+              setAddEntryLocation(null);
+              getEntries();
+            }}
+            location={addEntryLocation}
+          />
+        </div>
+      </Popup>
+    ) : (
+      ""
+    );
 
   return (
     <ReactMapGL
@@ -124,12 +160,13 @@ const App = () => {
                 </Button>
                 <Button
                   onClick={() => {
-                    onEdit();
+                    onEdit(entry._id);
                   }}
                   variant="danger"
                 >
                   Edit
                 </Button>
+                {editEntryLocation === true ? elmEditForm : null}
               </div>
             </Popup>
           ) : null}

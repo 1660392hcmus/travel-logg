@@ -13,14 +13,12 @@
       "dest": "src/index.js"
     }
   ],
-  "alias": [
-    "travel-log-api"
-  ],
+  "alias": ["travel-log-api"],
   "env": {
     "NODE_ENV": "production",
     "PORT": "1337",
     "DATABASE_URL": "@travel-log-db",
-    "CORS_ORIGIN": "https://travel-log.now.sh",
+    "CORS_ORIGIN": "travel-log.tainguyen.now.sh",
     "API_KEY": "@travel-log-api-key"
   }
 }

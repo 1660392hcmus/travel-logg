@@ -50,5 +50,15 @@ export async function deleteLogEntry(entry) {
   //   method: "DELETE"
   // }).then(res => respone.json());
   console.log("delete");
-  // return;
+}
+
+export async function editLogEntry(entry) {
+  await fetch(`${API_URL}/api/logs/${entry}`, {
+    method: "PUT",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(entry)
+  });
+  console.log(`${entry}`);
 }

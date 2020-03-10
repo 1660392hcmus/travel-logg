@@ -26,5 +26,6 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.0",
     "nodemon": "^2.0.2"
-  }
+  },
+  "now-build": "API_URL= https://travel-log.tainguyen.now.sh/server npm run dev"
 }

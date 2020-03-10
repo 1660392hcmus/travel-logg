@@ -61,13 +61,12 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.put("/:id", async (req, res, next) => {
-  try {
-    await LogEntry.findByIdAndUpdate(req.params.id, req.body);
-    return res.json({ message: "Update Successfully! " });
-  } catch (e) {
-    return res.message(e);
-  }
+router.put("/:id", (req, res, next) => {
+  // console.log(`aaaaaaaaaaaaaaaa`, req.body.id);
+  LogEntry.findByIdAndUpdate(req.params.id, req.body, function(err, entry) {
+    if (err) return next(err);
+    res.json(entry);
+  });
 });
 
 module.exports = router;
